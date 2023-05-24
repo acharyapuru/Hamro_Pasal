@@ -6,13 +6,22 @@ from django.contrib.auth import views as auth_views
 from .forms import LoginForm,MyPasswordChangeForm,MyPasswordResetForm,MySetPasswordForm
 urlpatterns = [
     path('', views.ProductView.as_view(),name='home'),
-    path('product-detail/<int:id>/', views.ProductDetailView.as_view(), name='product-detail'),
-    path('cart/', views.add_to_cart, name='add-to-cart'),
+
+    path('product-detail/<int:id>/', views.ProductDetailView.as_view(), 
+    name='product-detail'),
+
+    path('add-to-cart/', views.add_to_cart, name='add-to-cart'),
+
+    path('pluscart/',views.plus_cart),
+
+    path('cart/',views.show_cart,name='showcart'),
+
     path('buy/', views.buy_now, name='buy-now'),
+
     path('profile/', views.ProfileView.as_view(), name='profile'),
 
     path('address/', views.address, name='address'),
-    
+
     path('orders/', views.orders, name='orders'),
     path('mobile/', views.mobile, name='mobile'),
     path('mobile/<slug:data>',views.mobile,name='mobiledata'),
