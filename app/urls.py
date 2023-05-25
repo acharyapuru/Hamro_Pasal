@@ -15,6 +15,10 @@ urlpatterns = [
     path('pluscart/',views.plus_cart),
 
     path('cart/',views.show_cart,name='showcart'),
+    path('pluscart/',views.plus_cart),
+    path('minuscart/',views.minus_cart),
+    path('removecart/',views.remove_cart),
+
 
     path('buy/', views.buy_now, name='buy-now'),
 
