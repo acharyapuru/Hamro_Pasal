@@ -37,6 +37,7 @@ urlpatterns = [
     path('registration/', views.CustomerRegistrationView.as_view(), name='customerregistration'),
 
     path('checkout/', views.checkout, name='checkout'),
+    path('paymentdone/',views.payment_done,name='payment_done'),
 
     path('passwordchange/',auth_views.PasswordChangeView.as_view(template_name='app/passwordchange.html',
                                                                  
