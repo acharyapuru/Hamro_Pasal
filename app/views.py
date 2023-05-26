@@ -13,19 +13,25 @@ from django.utils.decorators import method_decorator
 #  return render(request, 'app/home.html')
 class ProductView(View):
  def get(self,request):
+  totalitem=0
   topwears=Product.objects.filter(category='TW')
   bottomwears=Product.objects.filter(category='BW')
   mobiles=Product.objects.filter(category='M')
-  return render(request,'app/home.html',{'topwears':topwears,'bottomwears':bottomwears,'mobiles':mobiles})
+  if request.user.is_authenticated:
+   totalitem=len(Cart.objects.filter(user=request.user))
+  return render(request,'app/home.html',{'topwears':topwears,'bottomwears':bottomwears,'mobiles':mobiles,'totalitem':totalitem})
 
 # def product_detail(request):
 #  return render(request, 'app/productdetail.html')
 class ProductDetailView(View):
  def get(self,request,id):
+  totalitem=0
   product=Product.objects.get(pk=id)
   item_already_in_cart=False
-  item_already_in_cart=Cart.objects.filter(Q(product=product.id)&Q(user=request.user)).exists()
-  return render(request,'app/productdetail.html',{'product':product,'item_already_in_cart':item_already_in_cart})
+  if request.user.is_authenticated:
+   totalitem=len(Cart.objects.filter(user=request.user))
+   item_already_in_cart=Cart.objects.filter(Q(product=product.id)&Q(user=request.user)).exists()
+  return render(request,'app/productdetail.html',{'product':product,'item_already_in_cart':item_already_in_cart,'totalitem':totalitem})
  
 @login_required
 def add_to_cart(request):
@@ -36,9 +42,11 @@ def add_to_cart(request):
  return redirect('/cart')
 @login_required
 def show_cart(request):
+ totalitem=0
  if request.user.is_authenticated:
   user=request.user
   cart=Cart.objects.filter(user=user)
+  totalitem=len(Cart.objects.filter(user=request.user))
   amount=0.0
   shipping_amount=70.0
   totalamount=0.0
@@ -49,7 +57,7 @@ def show_cart(request):
     amount=amount+tempamount
     totalamount=amount+shipping_amount
 
-  return render(request,'app/addtocart.html',{'carts':cart,'totalamount':totalamount,'amount':amount})
+  return render(request,'app/addtocart.html',{'carts':cart,'totalamount':totalamount,'amount':amount,'totalitem':totalitem})
 
 
  
@@ -112,7 +120,7 @@ def remove_cart(request):
   return JsonResponse(data)
 
 
-
+@login_required
 def buy_now(request):
  user=request.user
  prod_id=request.GET['prod_id']
